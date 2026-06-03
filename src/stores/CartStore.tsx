@@ -4,7 +4,7 @@ import { action, computed, makeAutoObservable, observable } from 'mobx';
 export class CartStore {
     cart = observable.map<number, CartItem>();
 
-    constructor() {
+    constructor(id: number) {
         makeAutoObservable(this, {
             TotalPrice: computed,
             TotalItems: computed,
@@ -13,6 +13,7 @@ export class CartStore {
             clearCart: action,
         });
     }
+
 
     get TotalPrice() {
         return Array.from(this.cart.values()).reduce((total, item) => total + item.price * item.quantity, 0);
