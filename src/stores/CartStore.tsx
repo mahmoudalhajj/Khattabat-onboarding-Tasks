@@ -1,8 +1,8 @@
 import { CartItem } from '../types/CartItem';
-import { action, computed, makeAutoObservable } from 'mobx';
+import { action, computed, makeAutoObservable, observable } from 'mobx';
 
 export class CartStore {
-    cart: CartItem[]= [];
+    cart = observable.map<number, CartItem>();
 
     constructor() {
         makeAutoObservable(this, {
@@ -15,28 +15,29 @@ export class CartStore {
     }
 
     get TotalPrice() {
-        return this.cart.reduce((total, item) => total + item.price * item.quantity, 0);
+        return Array.from(this.cart.values()).reduce((total, item) => total + item.price * item.quantity, 0);
+        
     }
 
     get TotalItems() {
-        return this.cart.reduce((total, item) => total + item.quantity, 0);
+        return Array.from(this.cart.values()).reduce((total, item) => total + item.quantity, 0);
     }
 
     addItem(item: CartItem) {
-        const existingItem = this.cart.find(i => i.id === item.id);
+        const existingItem = this.cart.get(item.id);
         if (existingItem) {
             existingItem.quantity += item.quantity;
         } else {
-            this.cart.push(item);
+            this.cart.set(item.id, item);
         }
     }
 
     removeItem(itemId: number) {
-        this.cart = this.cart.filter(item => item.id !== itemId);
+        this.cart.delete(itemId);
     }
 
     clearCart() {
-        this.cart = [];
+        this.cart.clear();
     }
     
 }
