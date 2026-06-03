@@ -30,7 +30,7 @@ export class OnboardingStore{
 
     async updateItems() {
         this.setLoading = true;
-try{
+    try{
          const data =
             await Promise.resolve([
                 { id: 1, name: "Item1" },
