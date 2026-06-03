@@ -30,7 +30,7 @@ export class OnboardingStore{
 
     async updateItems() {
         this.setLoading = true;
-
+try{
          const data =
             await Promise.resolve([
                 { id: 1, name: "Item1" },
@@ -40,10 +40,16 @@ export class OnboardingStore{
         runInAction(() => {
             data.forEach(item => { 
                 this.itemsById.set(item.id, item.name) });
+            });
 
+        }catch(error){
+            runInAction(() => {
+            console.error("Failed to fetch items", error);
+            });
+        }
             this.setLoading = false;
-        });
+        }
 
     }
-}
+
 
