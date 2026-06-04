@@ -6,9 +6,13 @@ export class CartStore {
   itemName = "";
   itemPrice = "";
   itemQuantity = "";
+  error = "";
   
   constructor() {
     makeAutoObservable(this);
+  }
+  getError() {
+    return this.error;
   }
 
   getTotalPrice= () => {
@@ -33,22 +37,25 @@ export class CartStore {
   setItemQuantity(quantity: string) {
     this.itemQuantity = quantity;
   }
- setCartItemQuantity(item: cartItem, amount: number) {
-        item.quantity += amount;
-    }
+  setCartItemQuantity(item: cartItem, amount: number) {
+    item.quantity += amount;
+  }
 
   setCartItem(item: cartItem) {
     runInAction(() => {
-    if (this.cart.has(item.id)) {
-        const existingItem = this.cart.get(item.id);
-    if (existingItem) {
-            this.setCartItemQuantity(existingItem, item.quantity);
+      const existingItem = this.cart.get(item.id);
+
+      if (existingItem) {
+        this.setCartItemQuantity(existingItem, item.quantity);
+      } else {
+        if (item.quantity > 0 && item.price > 0 ) {
+          this.cart.set(item.id, item);
         } else {
-            this.cart.set(item.id, item);
+            this.error = "Price and quantity must be greater than zero.";
         }
-        }
+      }
     });
-    }
+  }
 
   removeItem(itemId: number) {
     this.cart.delete(itemId);

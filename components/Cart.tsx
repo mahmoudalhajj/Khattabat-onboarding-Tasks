@@ -1,6 +1,7 @@
+"use client";
+
 import { observer } from "mobx-react-lite";
 import { cartStore } from "../stores/CartStore";
-import { CartProps } from "../types/cartProps";
 import {
   Typography,
   TextField,
@@ -9,9 +10,10 @@ import {
   Paper,
 } from "@mui/material";
 
-const CartSummary = observer(({ cartItem }: CartProps) => {
+const CartSummary = observer(() => {
   const totalItems = cartStore.getTotalItems();
   const totalPrice = cartStore.getTotalPrice();
+  const error = cartStore.getError();
 
     const handleAddItem = () => {
         cartStore.setCartItem({
@@ -21,10 +23,11 @@ const CartSummary = observer(({ cartItem }: CartProps) => {
             quantity: Number(cartStore.itemQuantity),
         });
     };
+    
 
     return (
         <Paper
-            elevation={0}
+                elevation={2}
             sx={{
                 p: 3,
                 borderRadius: 4,
@@ -32,6 +35,9 @@ const CartSummary = observer(({ cartItem }: CartProps) => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                width: '100%',
+                maxWidth: 520,
+                boxShadow: 3,
             }}
         >
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
@@ -40,11 +46,13 @@ const CartSummary = observer(({ cartItem }: CartProps) => {
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
                 Total Price: ${totalPrice}
             </Typography>
-            <Typography variant="body2" sx={{ mb: 2 }}>
-                Selected item: {cartItem.name} — ${cartItem.price} × {cartItem.quantity}
-            </Typography>
+            {error && (
+                <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                    {error}
+                </Typography>
+            )}
 
-            <Stack spacing={1.5} sx={{ width: "100%" }}>
+            <Stack spacing={1.5} sx={{ width: "100%", mb: 2 }}>
                 <TextField
                     fullWidth
                     value={cartStore.itemName}

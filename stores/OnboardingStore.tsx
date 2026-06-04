@@ -9,11 +9,16 @@ export class OnboardingStore{
 
 
     setLoading(loading: boolean) {
+        runInAction(()=>{
         this.loading.set(loading);
-    }
+        }
+    )}
+    
     setSelectedId(id: number){
+        runInAction(()=>{
         this.selectedId.set(id);
-    }
+        }
+        )}
     setSearchText= (text: string)=>{
           runInAction(()=>{
         this.searchText.set(text);
