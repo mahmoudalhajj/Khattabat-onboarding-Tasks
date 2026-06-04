@@ -61,3 +61,5 @@ export class CartStore {
        return Array.from(this.cart.values());
     }
 }
+
+export const cartStore = new CartStore();
