@@ -9,6 +9,7 @@ import {
   Stack,
   Paper,
 } from "@mui/material";
+import colors from "@/constants/colors";
 
 const CartSummary = observer(() => {
   const totalItems = cartStore.getTotalItems();
@@ -31,7 +32,7 @@ const CartSummary = observer(() => {
             sx={{
                 p: 3,
                 borderRadius: 4,
-                backgroundColor: '#f8f8f8',
+                backgroundColor: colors.background,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
