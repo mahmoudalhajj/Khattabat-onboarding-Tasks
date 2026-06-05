@@ -1,6 +1,10 @@
-import {action, makeObservable, observable,runInAction} from 'mobx';
+import {action, makeAutoObservable, observable,runInAction} from 'mobx';
 
 export class OnboardingStore{
+
+    constructor() {
+    makeAutoObservable(this);
+}
 
     loading = observable.box(false);
     selectedId = observable.box<number | null>(null);
@@ -54,8 +58,10 @@ export class OnboardingStore{
             console.error("Failed to fetch items", error);
             });
         }
+         finally{
             this.setLoading(false);
         }
+    }
         
 
     }
