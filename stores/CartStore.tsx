@@ -10,8 +10,8 @@ export class CartStore {
   error = "";
   
   constructor() {
-    makeAutoObservable(this);
-    this.loadStoredCart();
+  makeAutoObservable(this);
+  this.loadStoredCart();
   }
 
   getError() {
