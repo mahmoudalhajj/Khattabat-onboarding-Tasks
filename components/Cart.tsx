@@ -18,6 +18,9 @@ import {
 } from "@mui/material";
 
 const CartSummary = observer(() => {
+  const name = cartStore.getItemName();
+  const price = cartStore.getItemPrice();
+  const quantity = cartStore.getItemQuantity();
   const totalItems = cartStore.getTotalItems();
   const totalPrice = cartStore.getTotalPrice();
   const error = cartStore.getError();
@@ -26,9 +29,9 @@ const CartSummary = observer(() => {
   const handleAddItem = () => {
     cartStore.setCartItem({
       id: Date.now(),
-      name: cartStore.itemName,
-      price: Number(cartStore.itemPrice),
-      quantity: Number(cartStore.itemQuantity),
+      name,
+      price: Number(price),
+      quantity: Number(quantity),
     });
   };
 
@@ -71,14 +74,14 @@ const CartSummary = observer(() => {
         <Stack spacing={1.5} sx={{ width: "100%", mb: 2, mt: 2 }}>
           <TextField
             fullWidth
-            value={cartStore.itemName}
+            value={name}
             onChange={(e) => cartStore.setItemName(e.target.value)}
             placeholder="Item Name"
             size="small"
           />
           <TextField
             fullWidth
-            value={cartStore.itemPrice}
+            value={price}
             onChange={(e) => cartStore.setItemPrice(e.target.value)}
             placeholder="Price"
             type="number"
@@ -86,7 +89,7 @@ const CartSummary = observer(() => {
           />
           <TextField
             fullWidth
-            value={cartStore.itemQuantity}
+            value={quantity}
             onChange={(e) => cartStore.setItemQuantity(e.target.value)}
             placeholder="Quantity"
             type="number"

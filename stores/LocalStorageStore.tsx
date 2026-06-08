@@ -10,6 +10,7 @@ class LocalStorageStore {
     makeAutoObservable(this);
   }
 
+
 storageGet(key: string) {
     try {
       const get = localStorage.getItem(key);

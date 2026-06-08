@@ -4,42 +4,64 @@ import { localStorageStore, StorageKey } from "./LocalStorageStore";
 
 export class CartStore {
   cart = observable.map<number, cartItem>();
-  itemName = "";
-  itemPrice = "";
-  itemQuantity = "";
-  error = "";
+  itemName =   observable.box<string>("");
+  itemPrice =  observable.box<string>("");
+  itemQuantity =  observable.box<string>("");
+  error =  observable.box<string>("");
   
-  constructor() {
-  makeAutoObservable(this);
-  this.loadStoredCart();
-  }
 
   getError() {
-    return this.error;
+    return this.error.get();
   }
 
-  getTotalPrice= () => {
+  getItemName() {
+    return this.itemName.get();
+  }
+
+  getItemPrice() {
+    return this.itemPrice.get();
+  }
+
+  getItemQuantity() {
+    return this.itemQuantity.get();
+  }
+
+  setError = (value: string) => {
+    runInAction(() => {
+      this.error.set(value);
+    });
+  };
+
+  getTotalPrice = () => {
     const CartValues = Array.from(this.cart.values());
     const reducedValues = CartValues.reduce((total, item) => total + item.price * item.quantity, 0);
     return reducedValues;
-  }
+  };
+
   getTotalItems = () => {
     const CartValues = Array.from(this.cart.values());
     const reducedValues = CartValues.reduce((total, item) => total + item.quantity, 0);
     return reducedValues;
-  }
+  };
 
   setItemPrice(price: string) {
-    this.itemPrice = price;
+    runInAction(() => {
+      this.itemPrice.set(price);
+    });
   }
 
   setItemName(name: string) {
-    this.itemName = name;
+    runInAction(() => {
+      this.itemName.set(name);
+    });
   }
 
   setItemQuantity(quantity: string) {
-    this.itemQuantity = quantity;
+    runInAction(() => {
+      this.itemQuantity.set(quantity);
+    });
   }
+
   setCartItemQuantity(item: cartItem, amount: number) {
     item.quantity += amount;
   }
@@ -62,7 +84,7 @@ export class CartStore {
         this.cart.set(item.id, item);
         this.storeCart();
       } else {
-        this.error = "Price and quantity must be greater than zero.";
+        this.setError("Price and quantity must be greater than zero.");
       }
     });
   }
