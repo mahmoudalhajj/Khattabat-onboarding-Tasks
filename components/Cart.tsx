@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { cartStore } from "../stores/CartStore";
 import { Colors as colors } from "../enums/colors";
@@ -18,6 +19,10 @@ import {
 } from "@mui/material";
 
 const CartSummary = observer(() => {
+  useEffect(() => {
+    cartStore.loadStoredCart();
+  }, []);
+
   const name = cartStore.getItemName();
   const price = cartStore.getItemPrice();
   const quantity = cartStore.getItemQuantity();

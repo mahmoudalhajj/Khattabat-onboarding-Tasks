@@ -1,14 +1,13 @@
 import { cartItem } from "../types/cartItem";
-import { makeAutoObservable, observable, runInAction } from "mobx";
+import { observable, runInAction } from "mobx";
 import { localStorageStore, StorageKey } from "./LocalStorageStore";
 
 export class CartStore {
   cart = observable.map<number, cartItem>();
-  itemName =   observable.box<string>("");
-  itemPrice =  observable.box<string>("");
-  itemQuantity =  observable.box<string>("");
-  error =  observable.box<string>("");
-  
+  itemName = observable.box<string>("");
+  itemPrice = observable.box<string>("");
+  itemQuantity = observable.box<string>("");
+  error = observable.box<string>("");
 
   getError() {
     return this.error.get();
@@ -108,14 +107,17 @@ export class CartStore {
   }
 
 loadStoredCart() {
+
+
   const stored = localStorageStore.storageGet(StorageKey.Cart);
   if (!Array.isArray(stored)) {
     return;
   }
+
   runInAction(() => {
-  stored.forEach((entry) => {
-    this.cart.set(entry.id, entry);
-  });
+    stored.forEach((entry) => {
+      this.cart.set(entry.id, entry);
+    });
   });
 }
 

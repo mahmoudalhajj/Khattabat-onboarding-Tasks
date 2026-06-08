@@ -20,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Box sx={{ flexGrow: 1 }} />
             <Button component={Link} href="/cart">Cart</Button>
             <Button component={Link} href="/profile">Profile</Button>
+            <Button component={Link} href="/chat">Chat</Button>
           </Toolbar>
         </AppBar>
 
