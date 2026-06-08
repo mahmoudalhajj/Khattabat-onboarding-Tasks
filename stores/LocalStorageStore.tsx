@@ -3,6 +3,7 @@ import { makeAutoObservable } from "mobx";
 
 export enum StorageKey {
   Cart = "cart",
+  Messages="messages"
 }
 
 class LocalStorageStore {

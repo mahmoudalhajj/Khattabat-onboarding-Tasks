@@ -75,7 +75,7 @@ export class CartStore {
       const existingItem = this.cart.get(item.id);
 
       if (existingItem) {
-        this.setCartItemQuantity(existingItem, item.quantity);
+        this.setCartItemQuantity(existingItem, item.quantity); 
         this.storeCart();
         return;
       }
