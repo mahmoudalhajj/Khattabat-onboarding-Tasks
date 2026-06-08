@@ -44,25 +44,25 @@ export class CartStore {
     return reducedValues;
   };
 
-  setItemPrice(price: string) {
+  setItemPrice =(price: string) => {
     runInAction(() => {
       this.itemPrice.set(price);
     });
   }
 
-  setItemName(name: string) {
+  setItemName= (name: string) => {
     runInAction(() => {
       this.itemName.set(name);
     });
   }
 
-  setItemQuantity(quantity: string) {
+  setItemQuantity= (quantity: string)=> {
     runInAction(() => {
       this.itemQuantity.set(quantity);
     });
   }
 
-  setCartItemQuantity(item: cartItem, amount: number) {
+  setCartItemQuantity=(item: cartItem, amount: number) => {
     item.quantity += amount;
   }
 
