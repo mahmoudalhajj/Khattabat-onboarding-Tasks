@@ -2,7 +2,7 @@
 
 import { observer } from "mobx-react-lite";
 import { cartStore } from "../stores/CartStore";
-import { Colors as colors } from "../constants/colors";
+import { Colors as colors } from "../enums/colors";
 import {
   Box,
   Typography,
