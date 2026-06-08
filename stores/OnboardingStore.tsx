@@ -1,4 +1,4 @@
-import {action, makeAutoObservable, observable,runInAction} from 'mobx';
+import {makeAutoObservable, observable,runInAction} from 'mobx';
 
 export class OnboardingStore{
 

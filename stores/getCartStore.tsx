@@ -4,5 +4,5 @@ import { CartStore } from "./CartStore";
 
 export const getCartStore = memoize(
     (item: cartItem) => { return new CartStore(); },
-    (item) => item.id
+    (item) => item.id   
 );
