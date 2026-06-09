@@ -57,7 +57,7 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
         <Toolbar sx={{ gap: 2 }}>
           <Avatar sx={{ bgcolor: colors.secondary }}>C</Avatar>
           <Box>
-            <Typography variant="h6">Khattabat Chat</Typography>
+            <Typography variant="h6">Chat</Typography>
             <Typography variant="caption" color="text.secondary">
               Type a message and press send.
             </Typography>
@@ -79,7 +79,7 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
         {messages.length === 0 ? (
           <Box sx={{ mt: 4, textAlign: "center" }}>
             <Typography variant="subtitle1" color="text.secondary">
-              No messages yet. Start the conversation.
+              No messages yet.
             </Typography>
           </Box>
         ) : (
