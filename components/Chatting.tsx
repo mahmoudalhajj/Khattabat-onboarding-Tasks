@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, KeyboardEvent } from "react";
+import { useEffect, KeyboardEvent, useRef } from "react";
 import { observer } from "mobx-react-lite";
 import { messageStore } from "../stores/MessageStore";
-import { MessageSender } from "../enums/MessageSender";
 import { Colors as colors } from "../enums/colors";
 import {
   Box,
@@ -17,13 +16,18 @@ import {
 } from "@mui/material";
 
 const Chatting = observer (()=> {
+  const endRef = useRef<HTMLDivElement | null>(null);
+  const messages = messageStore.getAllMessages();
+  const draft = messageStore.getDraft();
+
   useEffect(() => {
     messageStore.loadStoredMessages();
   }, []);
 
-  const messages = messageStore.getAllMessages();
-  const draft = messageStore.getDraft();
-  
+  useEffect(() => {
+  endRef.current?.scrollIntoView({ behavior: "smooth" });
+}, [messages.length]);
+
 
 const handleSend = () => {
     messageStore.sendMessages(
@@ -42,7 +46,7 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
       sx={{
         width: "100%",
         maxWidth: 780,
-        minHeight: 680,
+        height: 680,
         display: "flex",
         flexDirection: "column",
         borderRadius: 3,
@@ -80,36 +84,42 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
           </Box>
         ) : (
           messages.map((message) => {
-            const isClient = message.sender === MessageSender.client;
             return (
               <Box
                 key={message.id}
                 sx={{
-                  alignSelf: isClient ? "flex-end" : "flex-start",
+                  alignSelf: "flex-end",
                   maxWidth: "85%",
                 }}
               >
                 <Paper
                   sx={{
                     p: 1.8,
-                    bgcolor: isClient ? colors.secondary : "white",
-                    color: isClient ? "white" : "text.primary",
+                    bgcolor: "text.primary",
+                    color: "white",
                     borderRadius: 3,
-                    borderTopLeftRadius: isClient ? 3 : 0,
-                    borderTopRightRadius: isClient ? 0 : 3,
                   }}
                 >
                   <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
                     {message.text}
                   </Typography>
                   <Typography variant="caption" sx={{ mt: 0.5, display: "block", opacity: 0.75 }}>
-                    {String(message.createdAt)}
+                    {(() => {
+                      const createdAt = new Date(message.createdAt);
+                      return `${createdAt.toLocaleDateString(undefined, {
+                        weekday: "short",
+                      })} ${createdAt.toLocaleTimeString(undefined, {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}`;
+                    })()}
                   </Typography>
                 </Paper>
               </Box>
             );
           })
         )}
+        <Box ref={endRef} />
       </Box>
 
       <Box component="form" onSubmit={(event) => { event.preventDefault(); handleSend(); }} sx={{ p: 2, bgcolor: "background.paper", borderTop: "1px solid", borderColor: "divider" }}>
@@ -140,10 +150,11 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
             Send
           </Button>
         </Box>
+        
       </Box>
     </Paper>
-  );
-});
 
+);
+});
 
 export default Chatting;

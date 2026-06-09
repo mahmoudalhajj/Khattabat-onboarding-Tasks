@@ -55,6 +55,7 @@ export class MessageStore {
 
   loadStoredMessages() {
    const stored = localStorageStore.storageGet(StorageKey.Messages);
+   if(!stored) return;
    runInAction(() => {
     stored.forEach((message: message) => {
       this.messages.set(message.id, message);
