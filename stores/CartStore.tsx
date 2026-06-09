@@ -1,44 +1,56 @@
-import {cartItem} from "../types/cartItem";
-import { makeAutoObservable, observable, runInAction } from "mobx";
+import { cartItem } from "../types/cartItem";
+import { observable, runInAction } from "mobx";
+import { localStorageStore, StorageKey } from "./LocalStorageStore";
 
 export class CartStore {
   cart = observable.map<number, cartItem>();
-  itemName = "";
-  itemPrice = "";
-  itemQuantity = "";
-  error = "";
-  
-  constructor() {
-    makeAutoObservable(this);
-  }
-  getError() {
-    return this.error;
-  }
+  itemName = observable.box<string>("");
+  itemPrice = observable.box<string>("");
+  itemQuantity = observable.box<string>("");
+  error = observable.box<string>("");
 
-  getTotalPrice= () => {
+  setError = (value: string) => {
+    runInAction(() => {
+      this.error.set(value);
+    });
+  };
+
+  getTotalPrice = () => {
     const CartValues = Array.from(this.cart.values());
     const reducedValues = CartValues.reduce((total, item) => total + item.price * item.quantity, 0);
     return reducedValues;
-  }
+  };
+
   getTotalItems = () => {
     const CartValues = Array.from(this.cart.values());
     const reducedValues = CartValues.reduce((total, item) => total + item.quantity, 0);
     return reducedValues;
+  };
+
+  setItemPrice =(price: string) => {
+    runInAction(() => {
+      this.itemPrice.set(price);
+    });
   }
 
-  setItemPrice(price: string) {
-    this.itemPrice = price;
+  setItemName= (name: string) => {
+    runInAction(() => {
+      this.itemName.set(name);
+    });
   }
 
-  setItemName(name: string) {
-    this.itemName = name;
+  setItemQuantity= (quantity: string)=> {
+    runInAction(() => {
+      this.itemQuantity.set(quantity);
+    });
   }
 
-  setItemQuantity(quantity: string) {
-    this.itemQuantity = quantity;
-  }
-  setCartItemQuantity(item: cartItem, amount: number) {
+  setCartItemQuantity=(item: cartItem, amount: number) => {
     item.quantity += amount;
+  }
+
+  storeCart() {
+    localStorageStore.storageSet(StorageKey.Cart, Array.from(this.cart.values()));
   }
 
   setCartItem(item: cartItem) {
@@ -46,27 +58,55 @@ export class CartStore {
       const existingItem = this.cart.get(item.id);
 
       if (existingItem) {
-        this.setCartItemQuantity(existingItem, item.quantity);
+        this.setCartItemQuantity(existingItem, item.quantity); 
+        this.storeCart();
+        return;
+      }
+
+      if (item.quantity > 0 && item.price > 0) {
+        this.cart.set(item.id, item);
+        this.storeCart();
       } else {
-        if (item.quantity > 0 && item.price > 0 ) {
-          this.cart.set(item.id, item);
-        } else {
-            this.error = "Price and quantity must be greater than zero.";
-        }
+        this.setError("Price and quantity must be greater than zero.");
       }
     });
   }
 
   removeItem(itemId: number) {
-    this.cart.delete(itemId);
+    runInAction(() => {
+      this.cart.delete(itemId);
+      this.storeCart();
+    });
   }
 
-    clearCart() {
-        this.cart.clear();
-    }
-    showAllItems() {
-       return Array.from(this.cart.values());
-    }
+  clearCart() {
+    
+    if(this.cart.size===0) return;
+
+    runInAction(() => {
+      this.cart.clear();
+      this.storeCart();
+    });
+  }
+
+  showAllItems() {
+    return Array.from(this.cart.values());
+  }
+
+loadStoredCart() {
+
+  const stored = localStorageStore.storageGet(StorageKey.Cart);
+  if (!Array.isArray(stored)) {
+    return;
+  }
+
+  runInAction(() => {
+    stored.forEach((entry) => {
+      this.cart.set(entry.id, entry);
+    });
+  });
+}
+
 }
 
 export const cartStore = new CartStore();

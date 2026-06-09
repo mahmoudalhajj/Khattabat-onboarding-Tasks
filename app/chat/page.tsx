@@ -1,7 +1,7 @@
-import Image from "next/image";
+import Chatting from "@/components/Chatting";
 import { Box } from "@mui/material";
 
-export default function Home() {
+export default function CartPage() {
   return (
     <Box
       sx={{
@@ -12,9 +12,7 @@ export default function Home() {
         py: 4,
       }}
     >
-        <h2>This is the home page.</h2>
+      <Chatting />
     </Box>
   );
-  
-  
 }

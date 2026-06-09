@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { cartStore } from "../stores/CartStore";
-import { Colors as colors } from "../constants/colors";
+import { Colors as colors } from "../enums/colors";
 import {
   Box,
   Typography,
@@ -15,20 +16,34 @@ import {
   ListItemText,
   ListSubheader,
   Divider,
+  IconButton,
 } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import DeleteIcon from '@mui/icons-material/Delete';
+import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
+import Tooltip from "@mui/material/Tooltip";
+import Chip from "@mui/material/Chip";
 
 const CartSummary = observer(() => {
+  useEffect(() => {
+    cartStore.loadStoredCart();
+  }, []);
+
+const name = cartStore.itemName.get();
+const price = cartStore.itemPrice.get();  
+const quantity =cartStore.itemQuantity.get();
+const error = cartStore.error.get();
   const totalItems = cartStore.getTotalItems();
   const totalPrice = cartStore.getTotalPrice();
-  const error = cartStore.getError();
   const items = cartStore.showAllItems();
 
   const handleAddItem = () => {
     cartStore.setCartItem({
       id: Date.now(),
-      name: cartStore.itemName,
-      price: Number(cartStore.itemPrice),
-      quantity: Number(cartStore.itemQuantity),
+      name,
+      price: Number(price),
+      quantity: Number(quantity),
     });
   };
 
@@ -56,12 +71,32 @@ const CartSummary = observer(() => {
           boxShadow: 3,
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-          Total Items: {totalItems}
-        </Typography>
-        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-          Total Price: ${totalPrice}
-        </Typography>
+       <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+   <Chip
+  icon={<ShoppingCartIcon />}
+  label={`${totalItems} Items`}
+  variant="outlined"
+  color="primary"
+  size="medium"
+  sx={{
+    p:2,
+    fontSize: "16px",
+    fontWeight: 600,
+    borderWidth: 2,
+  }}
+/>
+<Chip
+  label={`$${totalPrice} Total`}
+  variant="filled"
+  color="primary"
+  size="medium"
+  sx={{
+    p:2.3,
+    fontSize: "16px",
+    fontWeight: 600,
+  }}
+/>
+      </Stack>
         {error && (
           <Typography variant="body2" sx={{ color: colors.error, mt: 1 }}>
             {error}
@@ -71,14 +106,14 @@ const CartSummary = observer(() => {
         <Stack spacing={1.5} sx={{ width: "100%", mb: 2, mt: 2 }}>
           <TextField
             fullWidth
-            value={cartStore.itemName}
+            value={name}
             onChange={(e) => cartStore.setItemName(e.target.value)}
             placeholder="Item Name"
             size="small"
           />
           <TextField
             fullWidth
-            value={cartStore.itemPrice}
+            value={price}
             onChange={(e) => cartStore.setItemPrice(e.target.value)}
             placeholder="Price"
             type="number"
@@ -86,7 +121,7 @@ const CartSummary = observer(() => {
           />
           <TextField
             fullWidth
-            value={cartStore.itemQuantity}
+            value={quantity}
             onChange={(e) => cartStore.setItemQuantity(e.target.value)}
             placeholder="Quantity"
             type="number"
@@ -94,14 +129,30 @@ const CartSummary = observer(() => {
           />
         </Stack>
 
-        <Stack direction="row" spacing={1} sx={{ width: "100%", mt: 2 }}>
-          <Button variant="contained" fullWidth onClick={handleAddItem}>
-            Add Item
-          </Button>
-          <Button variant="contained" fullWidth onClick={() => cartStore.clearCart()}>
-            Clear Cart
-          </Button>
-        </Stack>
+      <Stack direction="row" spacing={1} sx={{ width: "100%", mt: 2 }}>
+  <Tooltip title="Add item to cart">
+    <Button
+      variant="contained"
+      fullWidth
+      onClick={handleAddItem}
+      startIcon={<AddShoppingCartIcon />}
+      sx={{ textTransform: "none",borderRadius:10 }}
+    >
+      Add Item
+    </Button>
+  </Tooltip>
+  <Tooltip title="Remove all items">
+    <Button
+      variant="outlined"
+      fullWidth
+      onClick={() => cartStore.clearCart()}
+      startIcon={<DeleteIcon />}
+      sx={{ textTransform: "none",borderRadius:10 }}
+    >
+      Clear Cart
+    </Button>
+  </Tooltip>
+</Stack>
       </Paper>
 
       <Paper
@@ -137,23 +188,27 @@ const CartSummary = observer(() => {
                 fontWeight: 600,
               }}
             >
+               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <ShoppingCartIcon fontSize="small" />
               Cart Items
+            </Box>
             </ListSubheader>
           }
         >
           {items.length === 0 ? (
-            <ListItem>
-              <ListItemText
-                primary="No items added yet"
-                sx={{
-                  '& .MuiListItemText-primary': { color: colors.secondary },
-                }}
-              />
-            </ListItem>
+          <ListItem sx={{ justifyContent: "center", mt: 2 }}>
+            <Chip
+              icon={<RemoveShoppingCartIcon />}
+              label="No items added yet"
+              variant="outlined"
+              sx={{ color: colors.secondary, borderColor: colors.secondary,p:2 }}
+            />
+          </ListItem>
           ) : (
             items.map((item) => (
               <Box key={item.id} component="li" sx={{ listStyle: "none" }}>
                 <ListItem sx={{ px: 2, py: 1.5 }}>
+          
                   <ListItemText
                     primary={item.name}
                     secondary={`Price: $${item.price.toFixed(2)} · Quantity: ${item.quantity}`}

@@ -18,8 +18,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Button>
 
             <Box sx={{ flexGrow: 1 }} />
+            <Button component={Link} href="/chat">Chat</Button>
             <Button component={Link} href="/cart">Cart</Button>
             <Button component={Link} href="/profile">Profile</Button>
+
           </Toolbar>
         </AppBar>
 
