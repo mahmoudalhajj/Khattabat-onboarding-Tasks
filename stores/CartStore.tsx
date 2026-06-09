@@ -79,7 +79,7 @@ export class CartStore {
     });
   }
 
-  clearCart() {
+  clearCart= () => {
     
     if(this.cart.size===0) return;
 
