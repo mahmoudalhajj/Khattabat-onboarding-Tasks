@@ -33,6 +33,15 @@ export class MessageStore {
     return this.messages.size;
   };
 
+  formatCreatedAt(createdAt: Date | string) {
+    const date = new Date(createdAt);
+    return date.toLocaleString("en-US", {
+      weekday: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+
   setDraft = (draft: string) => {
     runInAction(()=> {
         this.draft.set(draft);
