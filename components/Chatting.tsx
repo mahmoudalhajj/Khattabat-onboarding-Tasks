@@ -130,7 +130,7 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
         <Box ref={endRef} />
       </Box>
 
-      <Box component="form" onSubmit={(event) => { event.preventDefault(); handleSend(); }} sx={{ p: 2, bgcolor: "background.paper", borderTop: "1px solid", borderColor: "divider" }}>
+      <Box component="form" onSubmit={() => { handleSend(); }} sx={{ p: 2, bgcolor: "background.paper", borderTop: "1px solid", borderColor: "divider" }}>
         <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, alignItems: "center" }}>
           <TextField
             fullWidth
