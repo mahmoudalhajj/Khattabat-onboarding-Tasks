@@ -13,7 +13,12 @@ import {
   AppBar,
   Toolbar,
   Avatar,
+  Badge,
+  Chip,
+  Divider,
+  Tooltip,
 } from "@mui/material";
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 
 const Chatting = observer (()=> {
   const endRef = useRef<HTMLDivElement | null>(null);
@@ -55,6 +60,17 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     >
       <AppBar position="static" sx={{ bgcolor: colors.primary, boxShadow: "none" }}>
         <Toolbar sx={{ gap: 2 }}>
+           <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            variant="dot"
+            sx={{
+              "& .MuiBadge-badge": {
+                bgcolor: "#44b700",
+                boxShadow: "0 0 0 2px white",
+              },
+            }}
+          ></Badge>
           <Avatar sx={{ bgcolor: colors.secondary }}>C</Avatar>
           <Box>
             <Typography variant="h6">Chat</Typography>
@@ -86,10 +102,14 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
         }}
       >
         {messages.length === 0 ? (
-          <Box sx={{ mt: 4, textAlign: "center" }}>
-            <Typography variant="subtitle1" color="text.secondary">
-              No messages yet.
-            </Typography>
+          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+             <Chip
+              icon={< ChatBubbleIcon sx={{ marginTop: "3px" }}  />}
+              label="No messages yet, start chatting!"
+              variant="outlined"
+              color="default"
+              sx={{ color: "text.secondary", borderColor: "divider"}}
+            />
           </Box>
         ) : (
           messages.map((message) => {
@@ -123,9 +143,22 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
         <Box ref={endRef} />
       </Box>
 
-      <Box component="form" onSubmit={() => { handleSend(); }} sx={{ p: 2, bgcolor: "background.paper", borderTop: "1px solid", borderColor: "divider" }}>
-        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, alignItems: "center" }}>
-          <TextField
+
+    <Box
+        component="form"
+        onSubmit={(e) => { e.preventDefault(); handleSend(); }}
+        sx={{ p: 2, bgcolor: "background.paper" }}
+      >
+  
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            gap: 2,
+            alignItems: "center",
+          }}
+           > 
+        <TextField
             fullWidth
             multiline
             minRows={1}
@@ -136,6 +169,7 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
             onKeyDown={handleKeyDown}
             sx={{ bgcolor: "white", borderRadius: 2 }}
           />
+          <Tooltip title="Send (Press Enter)" placement="top">
           <Button
             type="submit"
             variant="contained"
@@ -150,6 +184,8 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
           >
             Send
           </Button>
+          </Tooltip>
+
           
         </Box>
         

@@ -10,9 +10,10 @@ export default function Home() {
         alignItems: "center",
         px: 2,
         py: 4,
+        fontSize: 20,
       }}
     >
-        <h1>This is the home page.</h1>
+        <h1>Hsome page.</h1>
     </Box>
   );
   
