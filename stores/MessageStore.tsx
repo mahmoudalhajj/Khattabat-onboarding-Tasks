@@ -15,7 +15,7 @@ export class MessageStore {
       const message: message = {
         id: Date.now() * Math.random(),
         text: trimmedText,
-        sender: MessageSender.client,
+        sender: MessageSender.CLIENT,
         createdAt: new Date(),
       };
 

@@ -9,22 +9,6 @@ export class CartStore {
   itemQuantity = observable.box<string>("");
   error = observable.box<string>("");
 
-  getError() {
-    return this.error.get();
-  }
-
-  getItemName() {
-    return this.itemName.get();
-  }
-
-  getItemPrice() {
-    return this.itemPrice.get();
-  }
-
-  getItemQuantity() {
-    return this.itemQuantity.get();
-  }
-
   setError = (value: string) => {
     runInAction(() => {
       this.error.set(value);

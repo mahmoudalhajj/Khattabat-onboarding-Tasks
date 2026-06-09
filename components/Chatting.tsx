@@ -106,12 +106,11 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
                   <Typography variant="caption" sx={{ mt: 0.5, display: "block", opacity: 0.75 }}>
                     {(() => {
                       const createdAt = new Date(message.createdAt);
-                      return `${createdAt.toLocaleDateString(undefined, {
+                      return createdAt.toLocaleString("en-US", {
                         weekday: "short",
-                      })} ${createdAt.toLocaleTimeString(undefined, {
                         hour: "2-digit",
                         minute: "2-digit",
-                      })}`;
+                      });
                     })()}
                   </Typography>
                 </Paper>

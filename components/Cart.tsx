@@ -23,12 +23,12 @@ const CartSummary = observer(() => {
     cartStore.loadStoredCart();
   }, []);
 
-  const name = cartStore.getItemName();
-  const price = cartStore.getItemPrice();
-  const quantity = cartStore.getItemQuantity();
+const name = cartStore.itemName.get();
+const price = cartStore.itemPrice.get();  
+const quantity =cartStore.itemQuantity.get();
+const error = cartStore.error.get();
   const totalItems = cartStore.getTotalItems();
   const totalPrice = cartStore.getTotalPrice();
-  const error = cartStore.getError();
   const items = cartStore.showAllItems();
 
   const handleAddItem = () => {

@@ -1,4 +1,4 @@
 export enum MessageSender{
-    client = "CLIENT",
-    provider = "PROVIDER"
+    CLIENT = "CLIENT",
+    PROVIDER = "PROVIDER"
 }
