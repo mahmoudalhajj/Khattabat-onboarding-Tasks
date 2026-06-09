@@ -21,6 +21,7 @@ export class MessageStore {
 
       this.messages.set(message.id, message);
       this.storeMessages();
+      this.draft.set("");
     });
   };
 
