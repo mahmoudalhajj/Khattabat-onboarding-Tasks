@@ -4,8 +4,18 @@ import Link from "next/link";
 import { observer } from "mobx-react-lite";
 import { cartStore } from "@/stores/CartStore";
 import { Box, Typography, Button, Paper, Stack } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { authStore } from "@/stores/AuthStore";
 
 const ProfilePage = observer(() => {
+    const router = useRouter();
+
+   useEffect(() => {
+    if (!authStore.isLoggedIn()) {
+      router.replace("/auth");
+    }
+  }, [router]);
   return (
     <Box sx={{ maxWidth: 900, mx: "auto", mt: 4 }}>
       <Paper sx={{ p: 4, mb: 3 }}>
