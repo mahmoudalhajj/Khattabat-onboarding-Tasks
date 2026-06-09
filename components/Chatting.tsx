@@ -13,9 +13,7 @@ import {
   AppBar,
   Toolbar,
   Avatar,
-  Badge,
   Chip,
-  Divider,
   Tooltip,
 } from "@mui/material";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
@@ -60,17 +58,6 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     >
       <AppBar position="static" sx={{ bgcolor: colors.primary, boxShadow: "none" }}>
         <Toolbar sx={{ gap: 2 }}>
-           <Badge
-            overlap="circular"
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            variant="dot"
-            sx={{
-              "& .MuiBadge-badge": {
-                bgcolor: "#44b700",
-                boxShadow: "0 0 0 2px white",
-              },
-            }}
-          ></Badge>
           <Avatar sx={{ bgcolor: colors.secondary }}>C</Avatar>
           <Box>
             <Typography variant="h6">Chat</Typography>
@@ -108,7 +95,7 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
               label="No messages yet, start chatting!"
               variant="outlined"
               color="default"
-              sx={{ color: "text.secondary", borderColor: "divider"}}
+              sx={{ color: "text.secondary", borderColor: "divider", p:2}}
             />
           </Box>
         ) : (

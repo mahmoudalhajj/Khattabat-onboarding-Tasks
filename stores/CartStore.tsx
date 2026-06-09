@@ -80,6 +80,9 @@ export class CartStore {
   }
 
   clearCart() {
+    
+    if(this.cart.size===0) return;
+
     runInAction(() => {
       this.cart.clear();
       this.storeCart();
@@ -91,7 +94,6 @@ export class CartStore {
   }
 
 loadStoredCart() {
-
 
   const stored = localStorageStore.storageGet(StorageKey.Cart);
   if (!Array.isArray(stored)) {

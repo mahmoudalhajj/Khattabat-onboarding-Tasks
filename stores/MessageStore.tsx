@@ -49,7 +49,9 @@ export class MessageStore {
   }
 
   clearMessages = () => {
-    runInAction(() => {
+if (this.messages.size === 0) return;    
+
+  runInAction(() => {
       this.messages.clear();
     });
     this.storeMessages();
