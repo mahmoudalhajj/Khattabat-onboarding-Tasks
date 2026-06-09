@@ -29,10 +29,6 @@ export class MessageStore {
     return Array.from(this.messages.values());
   };
 
-  getMessageCount = () => {
-    return this.messages.size;
-  };
-
   formatCreatedAt(createdAt: Date | string) {
     const date = new Date(createdAt);
     return date.toLocaleString("en-US", {
