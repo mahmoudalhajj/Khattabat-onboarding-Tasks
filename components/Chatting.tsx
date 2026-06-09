@@ -62,6 +62,15 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
               Type a message and press send.
             </Typography>
           </Box>
+          <Box sx={{ ml: 'auto' }}>
+            <Button
+              color="inherit"
+              onClick={() => messageStore.clearMessages()}
+              sx={{ textTransform: 'none' }}
+            >
+              Clear
+            </Button>
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -148,6 +157,7 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
           >
             Send
           </Button>
+          
         </Box>
         
       </Box>
