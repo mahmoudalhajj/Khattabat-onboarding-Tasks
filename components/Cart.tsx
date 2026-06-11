@@ -7,23 +7,22 @@ import { Colors as colors } from "../enums/colors";
 import {
   Box,
   Typography,
-  TextField,
-  Button,
   Stack,
-  Paper,
   List,
-  ListItem,
-  ListItemText,
+  Tooltip,
+  Chip,
   ListSubheader,
-  Divider,
-  IconButton,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import DeleteIcon from '@mui/icons-material/Delete';
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
-import Tooltip from "@mui/material/Tooltip";
-import Chip from "@mui/material/Chip";
+
+import { CustomPaper } from "./common/CustomPaper";
+import { CustomButton } from "./common/CustomButton";
+import { CustomTextField } from "./common/CustomTextField";
+import { EmptyState } from "./common/EmptyState";
+import { CartItem } from "./cart/CartItem";
 
 const CartSummary = observer(() => {
   useEffect(() => {
@@ -49,45 +48,39 @@ const CartSummary = observer(() => {
         mt: 4,
       }}
     >
-      <Paper
-        elevation={2}
+      <CustomPaper
         sx={{
-          p: 3,
-          borderRadius: 4,
-          backgroundColor: colors.background,
-          border: `1px solid ${colors.secondary}`,
           display: "flex",
           flexDirection: "column",
           width: { xs: "100%", md: "50%" },
-          boxShadow: 3,
         }}
       >
-       <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-   <Chip
-  icon={<ShoppingCartIcon />}
-  label={`${totalItems} Items`}
-  variant="outlined"
-  color="primary"
-  size="medium"
-  sx={{
-    p:2,
-    fontSize: "16px",
-    fontWeight: 600,
-    borderWidth: 2,
-  }}
-/>
-<Chip
-  label={`$${totalPrice} Total`}
-  variant="filled"
-  color="primary"
-  size="medium"
-  sx={{
-    p:2.3,
-    fontSize: "16px",
-    fontWeight: 600,
-  }}
-/>
-      </Stack>
+        <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+          <Chip
+            icon={<ShoppingCartIcon />}
+            label={`${totalItems} Items`}
+            variant="outlined"
+            color="primary"
+            size="medium"
+            sx={{
+              p: 2,
+              fontSize: "16px",
+              fontWeight: 600,
+              borderWidth: 2,
+            }}
+          />
+          <Chip
+            label={`$${totalPrice} Total`}
+            variant="filled"
+            color="primary"
+            size="medium"
+            sx={{
+              p: 2.3,
+              fontSize: "16px",
+              fontWeight: 600,
+            }}
+          />
+        </Stack>
         {error && (
           <Typography variant="body2" sx={{ color: colors.error, mt: 1 }}>
             {error}
@@ -95,66 +88,54 @@ const CartSummary = observer(() => {
         )}
 
         <Stack spacing={1.5} sx={{ width: "100%", mb: 2, mt: 2 }}>
-          <TextField
-            fullWidth
+          <CustomTextField
             value={name}
             onChange={(e) => cartStore.setItemName(e.target.value)}
             placeholder="Item Name"
-            size="small"
           />
-          <TextField
-            fullWidth
+          <CustomTextField
             value={price}
             onChange={(e) => cartStore.setItemPrice(e.target.value)}
             placeholder="Price"
             type="number"
-            size="small"
           />
-          <TextField
-            fullWidth
+          <CustomTextField
             value={quantity}
             onChange={(e) => cartStore.setItemQuantity(e.target.value)}
             placeholder="Quantity"
             type="number"
-            size="small"
           />
         </Stack>
 
-      <Stack direction="row" spacing={1} sx={{ width: "100%", mt: 2 }}>
-  <Tooltip title="Add item to cart">
-    <Button
-      variant="contained"
-      fullWidth
-      onClick={cartStore.handleAddItem}
-      startIcon={<AddShoppingCartIcon />}
-      sx={{ textTransform: "none",borderRadius:10 }}
-    >
-      Add Item
-    </Button>
-  </Tooltip>
-  <Tooltip title="Remove all items">
-    <Button
-      variant="outlined"
-      fullWidth
-      onClick={() => cartStore.clearCart()}
-      startIcon={<DeleteIcon />}
-      sx={{ textTransform: "none",borderRadius:10 }}
-    >
-      Clear Cart
-    </Button>
-  </Tooltip>
-</Stack>
-      </Paper>
+        <Stack direction="row" spacing={1} sx={{ width: "100%", mt: 2 }}>
+          <Tooltip title="Add item to cart">
+            <Box sx={{ width: "100%" }}>
+                <CustomButton
+                    label="Add Item"
+                    onClick={() => cartStore.handleAddItem()}
+                    startIcon={<AddShoppingCartIcon />}
+                />
+            </Box>
+          </Tooltip>
+          <Tooltip title="Remove all items">
+             <Box sx={{ width: "100%" }}>
+                <CustomButton
+                    label="Clear Cart"
+                    variant="outlined"
+                    onClick={() => cartStore.clearCart()}
+                    startIcon={<DeleteIcon />}
+                />
+            </Box>
+          </Tooltip>
+        </Stack>
+      </CustomPaper>
 
-      <Paper
-        elevation={1}
+      <CustomPaper
         sx={{
-          p: 2,
-          borderRadius: 4,
-          backgroundColor: colors.background,
-          border: `1px solid ${colors.secondary}`,
           width: { xs: "100%", md: "50%" },
           minHeight: 400,
+          p: 0,
+          overflow: "hidden",
         }}
       >
         <List
@@ -165,7 +146,7 @@ const CartSummary = observer(() => {
             position: "relative",
             overflow: "auto",
             maxHeight: 360,
-            '& ul': { padding: 0 },
+            "& ul": { padding: 0 },
           }}
           subheader={
             <ListSubheader
@@ -177,44 +158,25 @@ const CartSummary = observer(() => {
                 borderBottom: `1px solid ${colors.secondary}`,
                 color: colors.secondary,
                 fontWeight: 600,
+                py: 1,
               }}
             >
-               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <ShoppingCartIcon fontSize="small" />
-              Cart Items
-            </Box>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <ShoppingCartIcon fontSize="small" />
+                Cart Items
+              </Box>
             </ListSubheader>
           }
         >
           {items.length === 0 ? (
-          <ListItem sx={{ justifyContent: "center", mt: 2 }}>
-            <Chip
-              icon={<RemoveShoppingCartIcon />}
-              label="No items added yet"
-              variant="outlined"
-              sx={{ color: colors.secondary, borderColor: colors.secondary,p:2 }}
-            />
-          </ListItem>
+            <EmptyState icon={<RemoveShoppingCartIcon />} label="No items added yet" />
           ) : (
             items.map((item) => (
-              <Box key={item.id} component="li" sx={{ listStyle: "none" }}>
-                <ListItem sx={{ px: 2, py: 1.5 }}>
-          
-                  <ListItemText
-                    primary={item.name}
-                    secondary={`Price: $${item.price.toFixed(2)} · Quantity: ${item.quantity}`}
-                    sx={{
-                      '& .MuiListItemText-primary': { fontWeight: 600, color: colors.secondary },
-                      '& .MuiListItemText-secondary': { color: colors.primary },
-                    }}
-                  />
-                </ListItem>
-                <Divider component="li" sx={{ borderColor: colors.secondary }} />
-              </Box>
+              <CartItem key={item.id} item={item} />
             ))
           )}
         </List>
-      </Paper>
+      </CustomPaper>
     </Box>
   );
 });

@@ -3,22 +3,17 @@
 import Link from "next/link";
 import { observer } from "mobx-react-lite";
 import { cartStore } from "@/stores/CartStore";
-import { Box, Typography, Button, Paper, Stack } from "@mui/material";
+import { Box, Typography, Stack } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { authStore } from "@/stores/AuthStore";
+import { CustomPaper } from "@/components/common/CustomPaper";
+import { CustomButton } from "@/components/common/CustomButton";
 
 const ProfilePage = observer(() => {
-    const router = useRouter();
-
-   useEffect(() => {
-    if (!authStore.isLoggedIn()) {
-      router.replace("/auth");
-    }
-  }, [router]);
   return (
-    <Box sx={{ maxWidth: 900, mx: "auto", mt: 4 }}>
-      <Paper sx={{ p: 4, mb: 3 }}>
+    <Box sx={{ maxWidth: 900, mx: "auto", mt: 4, px: 2 }}>
+      <CustomPaper sx={{ p: 4, mb: 3 }}>
         <Typography variant="h4" sx={{ mb: 2 }}>
           Profile
         </Typography>
@@ -28,16 +23,16 @@ const ProfilePage = observer(() => {
         </Typography>
 
         <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
-          <Button component={Link} href="/cart" variant="contained">
-            Open Cart
-          </Button>
-          <Button component={Link} href="/" variant="outlined">
-            Home
-          </Button>
+          <Box sx={{ width: "auto" }}>
+            <CustomButton component={Link} href="/cart" label="Open Cart" />
+          </Box>
+          <Box sx={{ width: "auto" }}>
+            <CustomButton component={Link} href="/" variant="outlined" label="Home" />
+          </Box>
         </Stack>
-      </Paper>
+      </CustomPaper>
 
-      <Paper sx={{ p: 4 }}>
+      <CustomPaper sx={{ p: 4 }}>
         <Typography variant="h5" sx={{ mb: 1 }}>
           Cart snapshot
         </Typography>
@@ -47,7 +42,7 @@ const ProfilePage = observer(() => {
         <Typography>
           Estimated total: <strong>${cartStore.getTotalPrice()}</strong>
         </Typography>
-      </Paper>
+      </CustomPaper>
     </Box>
   );
 });

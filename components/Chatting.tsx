@@ -8,15 +8,19 @@ import {
   Box,
   Paper,
   Typography,
-  TextField,
-  Button,
   AppBar,
   Toolbar,
   Avatar,
-  Chip,
   Tooltip,
+  Button,
 } from "@mui/material";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+
+import { CustomPaper } from "./common/CustomPaper";
+import { CustomButton } from "./common/CustomButton";
+import { CustomTextField } from "./common/CustomTextField";
+import { EmptyState } from "./common/EmptyState";
+import { MessageBubble } from "./chat/MessageBubble";
 
 const Chatting = observer (()=> {
   const endRef = useRef<HTMLDivElement | null>(null);
@@ -32,12 +36,11 @@ const Chatting = observer (()=> {
 }, [messages.length]);
 
 
-const handleSend = () => {
-    messageStore.sendMessages(
-        messageStore.getDraft()
-    );
-};
-const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+  const handleSend = () => {
+    messageStore.handleSendMessage();
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
       handleSend();
@@ -45,14 +48,14 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
   };
 
   return (
-    <Paper
+    <CustomPaper
       sx={{
         width: "100%",
         maxWidth: 780,
         height: 680,
         display: "flex",
         flexDirection: "column",
-        borderRadius: 3,
+        p: 0, 
         overflow: "hidden",
       }}
     >
@@ -89,43 +92,11 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
         }}
       >
         {messages.length === 0 ? (
-          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-             <Chip
-              icon={< ChatBubbleIcon sx={{ marginTop: "3px" }}  />}
-              label="No messages yet, start chatting!"
-              variant="outlined"
-              color="default"
-              sx={{ color: "text.secondary", borderColor: "divider", p:2}}
-            />
-          </Box>
+          <EmptyState icon={<ChatBubbleIcon />} label="No messages yet, start chatting!" />
         ) : (
-          messages.map((message) => {
-            return (
-              <Box
-                key={message.id}
-                sx={{
-                  alignSelf: "flex-end",
-                  maxWidth: "85%",
-                }}
-              >
-                <Paper
-                  sx={{
-                    p: 1.8,
-                    bgcolor: "text.primary",
-                    color: "white",
-                    borderRadius: 3,
-                  }}
-                >
-                  <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                    {message.text}
-                  </Typography>
-                  <Typography variant="caption" sx={{ mt: 0.5, display: "block", opacity: 0.75 }}>
-                    {messageStore.formatCreatedAt(message.createdAt)}
-                  </Typography>
-                </Paper>
-              </Box>
-            );
-          })
+          messages.map((message) => (
+            <MessageBubble key={message.id} message={message} />
+          ))
         )}
         <Box ref={endRef} />
       </Box>
@@ -145,8 +116,7 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
             alignItems: "center",
           }}
            > 
-        <TextField
-            fullWidth
+        <CustomTextField
             multiline
             minRows={1}
             maxRows={4}
@@ -154,30 +124,33 @@ const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
             value={draft}
             onChange={(event) => messageStore.setDraft(event.target.value)}
             onKeyDown={handleKeyDown}
-            sx={{ bgcolor: "white", borderRadius: 2 }}
+            sx={{ bgcolor: colors.background }}
           />
           <Tooltip title="Send (Press Enter)" placement="top">
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              bgcolor: colors.secondary,
-              color: "white",
-              px: 4,
-              py: 1.5,
-              textTransform: "none",
-              minWidth: 120,
-            }}
-          >
-            Send
-          </Button>
+            <Box sx={{ width: { xs: "100%", sm: "auto" } }}>
+              <CustomButton
+                type="submit"
+                label="Send"
+                sx={{
+                  bgcolor: colors.secondary,
+                  color: colors.background,
+                  px: 4,
+                  py: 1.5,
+                  minWidth: 120,
+                  '&:hover': {
+                    bgcolor: colors.secondary,
+                    opacity: 0.9,
+                  }
+                }}
+              />
+            </Box>
           </Tooltip>
 
           
         </Box>
         
       </Box>
-    </Paper>
+    </CustomPaper>
 
 );
 });

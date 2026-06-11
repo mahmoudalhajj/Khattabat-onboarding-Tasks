@@ -25,51 +25,55 @@ export class MessageStore {
     });
   };
 
+  handleSendMessage = () => {
+    this.sendMessages(this.draft.get());
+  };
+
   getAllMessages = () => {
     return Array.from(this.messages.values());
   };
 
-  formatCreatedAt(createdAt: Date | string) {
+  formatCreatedAt = (createdAt: Date | string) => {
     const date = new Date(createdAt);
     return date.toLocaleString("en-US", {
       weekday: "short",
       hour: "2-digit",
       minute: "2-digit",
     });
-  }
+  };
 
   setDraft = (draft: string) => {
-    runInAction(()=> {
-        this.draft.set(draft);
-    })
-  }
+    runInAction(() => {
+      this.draft.set(draft);
+    });
+  };
 
   getDraft = () => {
     return this.draft.get();
-  }
-
-  clearMessages = () => {
-if (this.messages.size === 0) return;    
-
-  runInAction(() => {
-      this.messages.clear();
-    });
-    this.storeMessages();
   };
 
-  storeMessages() {
-    localStorageStore.storageSet(StorageKey.Messages, this.getAllMessages());
-  }
+  clearMessages = () => {
+    if (this.messages.size === 0) return;
 
-  loadStoredMessages() {
-   const stored = localStorageStore.storageGet(StorageKey.Messages);
-   if(!stored) return;
-   runInAction(() => {
-    stored.forEach((message: message) => {
-      this.messages.set(message.id, message);
+    runInAction(() => {
+      this.messages.clear();
+      this.storeMessages();
     });
-  });
-}
+  };
+
+  storeMessages = () => {
+    localStorageStore.storageSet(StorageKey.Messages, this.getAllMessages());
+  };
+
+  loadStoredMessages = () => {
+    const stored = localStorageStore.storageGet(StorageKey.Messages);
+    if (!stored) return;
+    runInAction(() => {
+      stored.forEach((message: message) => {
+        this.messages.set(message.id, message);
+      });
+    });
+  };
 
     }   
 export const messageStore = new MessageStore();
