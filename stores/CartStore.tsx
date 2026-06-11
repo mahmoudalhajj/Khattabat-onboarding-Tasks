@@ -27,85 +27,114 @@ export class CartStore {
     return reducedValues;
   };
 
-  setItemPrice =(price: string) => {
+  setItemPrice = (price: string) => {
     runInAction(() => {
       this.itemPrice.set(price);
     });
-  }
+  };
 
-  setItemName= (name: string) => {
+  setItemName = (name: string) => {
     runInAction(() => {
       this.itemName.set(name);
     });
-  }
+  };
 
-  setItemQuantity= (quantity: string)=> {
+  setItemQuantity = (quantity: string) => {
     runInAction(() => {
       this.itemQuantity.set(quantity);
     });
-  }
+  };
 
-  setCartItemQuantity=(item: cartItem, amount: number) => {
-    item.quantity += amount;
-  }
+  handleAddItem = () => {
+    const name = this.itemName.get().trim();
+    const priceValue = this.itemPrice.get();
+    const quantityValue = this.itemQuantity.get();
 
-  storeCart() {
+    if (!name || !priceValue || !quantityValue) {
+      this.setError("All fields are required.");
+      return;
+    }
+
+    const price = Number(priceValue);
+    const quantity = Number(quantityValue);
+
+    if (isNaN(price) || isNaN(quantity) || price <= 0 || quantity <= 0) {
+      this.setError("Price and quantity must be greater than zero.");
+      return;
+    }
+
+    runInAction(() => {
+      this.setCartItem({
+        id: Date.now(),
+        name,
+        price,
+        quantity,
+      });
+
+      this.itemName.set("");
+      this.itemPrice.set("");
+      this.itemQuantity.set("");
+      this.error.set("");
+    });
+  };
+
+  setCartItemQuantity = (item: cartItem, amount: number) => {
+    runInAction(() => {
+      item.quantity += amount;
+    });
+  };
+
+  storeCart = () => {
     localStorageStore.storageSet(StorageKey.Cart, Array.from(this.cart.values()));
-  }
+  };
 
-  setCartItem(item: cartItem) {
+  setCartItem = (item: cartItem) => {
     runInAction(() => {
       const existingItem = this.cart.get(item.id);
 
       if (existingItem) {
-        this.setCartItemQuantity(existingItem, item.quantity); 
+        this.setCartItemQuantity(existingItem, item.quantity);
         this.storeCart();
         return;
       }
 
-      if (item.quantity > 0 && item.price > 0) {
-        this.cart.set(item.id, item);
-        this.storeCart();
-      } else {
-        this.setError("Price and quantity must be greater than zero.");
-      }
+      this.cart.set(item.id, item);
+      this.storeCart();
     });
-  }
+  };
 
-  removeItem(itemId: number) {
+  removeItem = (itemId: number) => {
     runInAction(() => {
       this.cart.delete(itemId);
       this.storeCart();
     });
-  }
+  };
 
-  clearCart= () => {
-    
-    if(this.cart.size===0) return;
+  clearCart = () => {
+    if (this.cart.size === 0) return;
 
     runInAction(() => {
       this.cart.clear();
       this.storeCart();
     });
-  }
+  };
 
-  showAllItems() {
+  showAllItems = () => {
     return Array.from(this.cart.values());
-  }
+  };
 
-loadStoredCart() {
+  loadStoredCart = () => {
+    const stored = localStorageStore.storageGet(StorageKey.Cart);
+    if (!Array.isArray(stored)) {
+      return;
+    }
 
-  const stored = localStorageStore.storageGet(StorageKey.Cart);
-  if (!Array.isArray(stored)) {
-    return;
-  }
-
-  runInAction(() => {
-    stored.forEach((entry) => {
-      this.cart.set(entry.id, entry);
+    runInAction(() => {
+      stored.forEach((entry) => {
+        this.cart.set(entry.id, entry);
+      });
     });
-  });
-}
+  };
 
 }
 

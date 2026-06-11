@@ -30,22 +30,13 @@ const CartSummary = observer(() => {
     cartStore.loadStoredCart();
   }, []);
 
-const name = cartStore.itemName.get();
-const price = cartStore.itemPrice.get();  
-const quantity =cartStore.itemQuantity.get();
-const error = cartStore.error.get();
+  const name = cartStore.itemName.get();
+  const price = cartStore.itemPrice.get();
+  const quantity = cartStore.itemQuantity.get();
+  const error = cartStore.error.get();
   const totalItems = cartStore.getTotalItems();
   const totalPrice = cartStore.getTotalPrice();
   const items = cartStore.showAllItems();
-
-  const handleAddItem = () => {
-    cartStore.setCartItem({
-      id: Date.now(),
-      name,
-      price: Number(price),
-      quantity: Number(quantity),
-    });
-  };
 
   return (
     <Box
@@ -134,7 +125,7 @@ const error = cartStore.error.get();
     <Button
       variant="contained"
       fullWidth
-      onClick={handleAddItem}
+      onClick={cartStore.handleAddItem}
       startIcon={<AddShoppingCartIcon />}
       sx={{ textTransform: "none",borderRadius:10 }}
     >
